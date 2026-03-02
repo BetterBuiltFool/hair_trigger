@@ -15,7 +15,7 @@ class SyncScheduler(Scheduler):
     Default, synchronous scheduler that simple calls the callable.
     """
 
-    def schedule(self, func: Callable, *args, **kwds) -> None:
+    def schedule(self, func: Callable[..., Any], *args, **kwds) -> None:
         func(*args, **kwds)
 
 

@@ -4,6 +4,7 @@ from typing import Protocol, TYPE_CHECKING
 
 if TYPE_CHECKING:
     from collections.abc import Callable
+    from typing import Any
 
 
 class Scheduler(Protocol):
@@ -11,7 +12,7 @@ class Scheduler(Protocol):
     Object used for following through on func registered to events.
     """
 
-    def schedule(self, func: Callable, *args, **kwds) -> None:
+    def schedule(self, func: Callable[..., Any], *args, **kwds) -> None:
         """
         Schedules a func to be called.
 
