@@ -7,7 +7,7 @@ from types import MethodType
 from typing import Any, TYPE_CHECKING
 from weakref import ref, WeakKeyDictionary
 
-from hair_trigger import threader
+from hair_trigger import scheduler, threader
 
 
 if TYPE_CHECKING:
@@ -66,7 +66,7 @@ class Event[T](ABC):
 
     @abstractmethod
     def trigger(self, *args, **kwds) -> None:
-        self._notify(*args, **kwds)
+        scheduler.schedule(self, *args, *kwds)
 
     def _register(self, caller, listener: Callable) -> None:
         listeners = self.listeners.setdefault(caller, [])
