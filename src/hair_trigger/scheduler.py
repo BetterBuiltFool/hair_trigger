@@ -1,45 +1,41 @@
 from __future__ import annotations
 
-import asyncio
-import threading
 from typing import Any, TYPE_CHECKING
+from weakref import WeakKeyDictionary
 
 from .typing.scheduler import Scheduler
 
 if TYPE_CHECKING:
-    from collections.abc import Callable
+    from hair_trigger.event import Event
+
+    type EventArgs = tuple[Any, Any]
 
 
-class SyncScheduler(Scheduler):
+class InstantScheduler(Scheduler):
     """
-    Default, synchronous scheduler that simple calls the callable.
-    """
-
-    def schedule(self, func: Callable[..., Any], *args, **kwds) -> None:
-        func(*args, **kwds)
-
-
-class ThreadScheduler(Scheduler):
-    """
-    Simple asynchronous scheduler using the python threading library.
+    Default scheduler type, events are run immediately as they happen.
     """
 
-    def schedule(self, func: Callable[..., Any], *args, **kwds) -> None:
-        threading.Thread(target=func, args=args, kwargs=kwds).start()
+    def schedule(self, event: Event[Any], *args, **kwds) -> None:
+        event._notify(*args, **kwds)
 
 
-class AsyncioScheduler(Scheduler):
+class DeferredScheduler(Scheduler):
     """
-    Scheduler that relies on asyncio, useful for web deployment where python.threading
-    doesn't work properly.
+    Scheduler that stores events and arguments until called upon.
     """
 
-    def schedule(self, func: Callable[..., Any], *args, **kwds) -> None:
-        asyncio.create_task(func(*args, **kwds))
+    def __init__(self) -> None:
+        self._scheduled_events: WeakKeyDictionary[Event, EventArgs] = (
+            WeakKeyDictionary()
+        )
+
+    def schedule(self, event: Event[Any], *args, **kwds) -> None:
+        self._scheduled_events[event] = (args, kwds)
 
 
-_active_scheduler: Scheduler = SyncScheduler()
+_active_scheduler: Scheduler = InstantScheduler()
 
 
-def schedule(func: Callable, *args, **kwds) -> None:
-    _active_scheduler.schedule(func, *args, **kwds)
+def schedule(event: Event[Any], *args, **kwds) -> None:
+    _active_scheduler.schedule(event, *args, **kwds)

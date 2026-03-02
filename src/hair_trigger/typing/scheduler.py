@@ -3,8 +3,8 @@ from __future__ import annotations
 from typing import Protocol, TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from collections.abc import Callable
     from typing import Any
+    from hair_trigger.event import Event
 
 
 class Scheduler(Protocol):
@@ -12,15 +12,15 @@ class Scheduler(Protocol):
     Object used for following through on func registered to events.
     """
 
-    def schedule(self, func: Callable[..., Any], *args, **kwds) -> None:
+    def schedule(self, event: Event[Any], *args, **kwds) -> None:
         """
-        Schedules a func to be called.
+        Schedules a event to be triggered.
 
-        :param func: Method or function to be scheduled.
-        :type func: Callable
-        :param args: Pass-through positional arguments for _func_.
+        :param event: Event to be scheduled.
+        :type event: Event
+        :param args: Pass-through positional arguments for _event_.
         :type args: Any
-        :param kwds: Pass-through keyword arguments for _func_.
+        :param kwds: Pass-through keyword arguments for _event_.
         :type kwds: Any
         """
         ...
