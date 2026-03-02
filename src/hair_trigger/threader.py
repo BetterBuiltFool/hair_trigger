@@ -41,5 +41,5 @@ class AsyncioThreader(Threader):
 _active_threader: Threader = SyncThreader()
 
 
-def schedule(func: Callable, *args, **kwds) -> None:
+def start(func: Callable[..., Any], *args, **kwds) -> None:
     _active_threader.start(func, *args, **kwds)
