@@ -59,3 +59,11 @@ _active_scheduler: Scheduler = InstantScheduler()
 
 def schedule(event: Event[Any], *args, **kwds) -> None:
     _active_scheduler.schedule(event, *args, **kwds)
+
+
+def process() -> None:
+    """
+    Processes the backlog of events.
+    """
+    for event, args, kwds in _active_scheduler:
+        event._notify(*args, **kwds)
