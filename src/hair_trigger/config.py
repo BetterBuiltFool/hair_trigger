@@ -16,6 +16,10 @@ def config(
     """
     Allows for setting how hair_trigger handle threading and scheduling of events.
 
+    Threaders are found in hair_trigger.threader.
+
+    Schedulers are found in hair_trigger.scheduler.
+
     :param scheduler: A new scheduler to replace the active scheduler, defaults to None.
         Will not replace the current scheduler if none is passed.
     :param threader: A new threader to replace the active threader, defaults to None.
