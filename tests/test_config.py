@@ -1,62 +1,44 @@
-from collections.abc import Callable
-from typing import Any
 import unittest
 
-from hair_trigger.config import config, SchedulingMode
-from hair_trigger import scheduler
-from hair_trigger.scheduler import Scheduler
-
-
-class CustomScheduler(Scheduler):
-
-    def schedule(self, func: Callable[..., Any], *args, **kwds) -> None:
-        pass
+from hair_trigger import scheduler, threader, config
 
 
 class TestConfig(unittest.TestCase):
 
     def tearDown(self) -> None:
-        config(SchedulingMode.DEFAULT)
+        config(scheduler.DEFAULT(), threader.DEFAULT())
 
-    def test_config(self) -> None:
+    def test_scheduler_no_threader(self) -> None:
+        """
+        Changing only the scheduler, see if the threader remains default.
+        """
 
-        # Threaded mode
+        config(scheduler=scheduler.QueueScheduler())
 
-        config(SchedulingMode.THREADED)
+        self.assertIsInstance(scheduler._active_scheduler, scheduler.QueueScheduler)
+        self.assertIsInstance(threader._active_threader, threader.DEFAULT)
 
-        self.assertIsInstance(scheduler._active_scheduler, scheduler.ThreadScheduler)
+    def test_threader_no_scheduler(self) -> None:
+        """
+        Changing only the threader, see if the scheduler remains default.
+        """
 
-        # Default mode
+        config(threader=threader.AsyncioThreader())
 
-        config(SchedulingMode.DEFAULT)
+        self.assertIsInstance(scheduler._active_scheduler, scheduler.DEFAULT)
+        self.assertIsInstance(threader._active_threader, threader.AsyncioThreader)
 
-        self.assertIsInstance(scheduler._active_scheduler, scheduler.SyncScheduler)
+    def test_both(self) -> None:
+        """
+        Ensure that both change appropriately.
+        """
 
-        # Asyncio mode
+        config(
+            scheduler=scheduler.QueueScheduler(), threader=threader.AsyncioThreader()
+        )
 
-        config(SchedulingMode.ASYNCIO)
-
-        self.assertIsInstance(scheduler._active_scheduler, scheduler.AsyncioScheduler)
-
-        # No mode change
-
-        config()
-
-        # Same as previous call, nothign should have changed.
-        self.assertIsInstance(scheduler._active_scheduler, scheduler.AsyncioScheduler)
-
-        # Custom mode, no scheduler supplied
-
-        with self.assertRaises(AssertionError):
-            config(SchedulingMode.CUSTOM)  # No scheduler supplied
-
-        # Custom mode
-
-        custom_scheduler = CustomScheduler()
-
-        config(SchedulingMode.CUSTOM, custom_scheduler)
-
-        self.assertIs(scheduler._active_scheduler, custom_scheduler)
+        self.assertIsInstance(threader._active_threader, threader.AsyncioThreader)
+        self.assertIsInstance(scheduler._active_scheduler, scheduler.QueueScheduler)
 
 
 if __name__ == "__main__":
