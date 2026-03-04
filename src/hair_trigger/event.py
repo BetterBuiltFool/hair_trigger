@@ -7,7 +7,7 @@ from types import MethodType
 from typing import Any, TYPE_CHECKING
 from weakref import ref, WeakKeyDictionary
 
-from hair_trigger import scheduler
+from hair_trigger import scheduler, threader
 
 
 if TYPE_CHECKING:
@@ -66,7 +66,7 @@ class Event[T](ABC):
 
     @abstractmethod
     def trigger(self, *args, **kwds) -> None:
-        self._notify(*args, **kwds)
+        scheduler.schedule(self, *args, *kwds)
 
     def _register(self, caller, listener: Callable) -> None:
         listeners = self.listeners.setdefault(caller, [])
@@ -100,10 +100,10 @@ class Event[T](ABC):
             # threads.
             if caller is not SENTINEL:
                 for listener in listeners:
-                    scheduler.schedule(listener, *(caller, *args))
+                    threader.start(listener, *(caller, *args))
                 continue
             for listener in listeners:
-                scheduler.schedule(listener, *args)
+                threader.start(listener, *args)
         for method_listeners in self.method_listeners.values():
             for method in method_listeners:
-                scheduler.schedule(method, *args)
+                threader.start(method, *args)

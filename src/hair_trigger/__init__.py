@@ -1,2 +1,3 @@
-from .config import config, SchedulingMode  # noqa:F401
+from .config import config  # noqa:F401
 from .event import Event  # noqa:F401
+from .scheduler import pump_events  # noqa:F401
