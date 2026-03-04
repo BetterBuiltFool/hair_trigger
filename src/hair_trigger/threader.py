@@ -38,7 +38,9 @@ class AsyncioThreader(Threader):
         asyncio.create_task(func(*args, **kwds))
 
 
-_active_threader: Threader = SyncThreader()
+DEFAULT: type[Threader] = SyncThreader
+
+_active_threader: Threader = DEFAULT()
 
 
 def start(func: Callable[..., Any], *args, **kwds) -> None:

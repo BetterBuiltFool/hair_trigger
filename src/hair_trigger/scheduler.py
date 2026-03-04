@@ -58,7 +58,9 @@ class QueueScheduler(Scheduler):
             event._notify(*args, **kwds)
 
 
-_active_scheduler: Scheduler = InstantScheduler()
+DEFAULT: type[Scheduler] = InstantScheduler
+
+_active_scheduler: Scheduler = DEFAULT()
 
 
 def schedule(event: Event[Any], *args, **kwds) -> None:
