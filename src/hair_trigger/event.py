@@ -70,7 +70,6 @@ class Event[T](ABC):
 
     def _register(self, caller, listener: Callable) -> None:
         listeners = self.listeners.setdefault(caller, [])
-        # TODO Test if method, keep methods and function in two different sets?
         listeners.append(listener)
 
     def _register_method(self, listener: MethodType) -> None:
@@ -96,8 +95,6 @@ class Event[T](ABC):
         listeners.
         """
         for caller, listeners in self.listeners.items():
-            # The pyrite threading module can be set to run regular threads or asyncio
-            # threads.
             if caller is not SENTINEL:
                 for listener in listeners:
                     threader.start(listener, *(caller, *args))
