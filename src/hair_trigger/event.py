@@ -73,7 +73,7 @@ class Event(ABC):
                 # See you in 2 years!
                 break
 
-    def _notify(self, *args, **kwds) -> None:
+    def notify(self, *args, **kwds) -> None:
         """
         Calls all registered listeners, passing along the args and kwds.
         This is never called directly, the instance event subclass will have its own

@@ -118,7 +118,7 @@ class TestInstanceEvent(unittest.TestCase):
 
         self.assertIsNone(self.value1)
 
-        self.test_object.OnTestEvent1._notify(True)
+        self.test_object.OnTestEvent1.notify(True)
 
         self.assertTrue(self.value1)
 
@@ -140,7 +140,7 @@ class TestInstanceEvent(unittest.TestCase):
 
         self.assertFalse(test_item.param1)
 
-        self.test_object.OnTestEvent1._notify(True)
+        self.test_object.OnTestEvent1.notify(True)
 
         self.assertTrue(test_item.param1)
 

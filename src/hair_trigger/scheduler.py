@@ -17,7 +17,7 @@ class InstantScheduler(Scheduler):
     """
 
     def schedule(self, event: Event, *args, **kwds) -> None:
-        event._notify(*args, **kwds)
+        event.notify(*args, **kwds)
 
     def pump(self) -> None:
         # No backlog to pump
@@ -38,7 +38,7 @@ class StackScheduler(Scheduler):
     def pump(self) -> None:
         while self._scheduled_events:
             event, args, kwds = self._scheduled_events.pop()
-            event._notify(*args, **kwds)
+            event.notify(*args, **kwds)
 
 
 class QueueScheduler(Scheduler):
@@ -55,7 +55,7 @@ class QueueScheduler(Scheduler):
     def pump(self) -> None:
         while self._scheduled_events:
             event, args, kwds = self._scheduled_events.popleft()
-            event._notify(*args, **kwds)
+            event.notify(*args, **kwds)
 
 
 DEFAULT: type[Scheduler] = InstantScheduler
