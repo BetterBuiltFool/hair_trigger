@@ -20,8 +20,8 @@ class OnTestEvent2(Event):
 class TestObject:
 
     def __init__(self) -> None:
-        self.OnTestEvent1 = OnTestEvent1(self)
-        self.OnTestEvent2 = OnTestEvent2(self)
+        self.OnTestEvent1 = OnTestEvent1()
+        self.OnTestEvent2 = OnTestEvent2()
         self.param1 = True
         self.param2 = 8
 

@@ -16,7 +16,7 @@ class InstantScheduler(Scheduler):
     Default scheduler type, events are run immediately as they happen.
     """
 
-    def schedule(self, event: Event[Any], *args, **kwds) -> None:
+    def schedule(self, event: Event, *args, **kwds) -> None:
         event._notify(*args, **kwds)
 
     def pump(self) -> None:
@@ -32,7 +32,7 @@ class StackScheduler(Scheduler):
     def __init__(self) -> None:
         self._scheduled_events: list[EventArgs] = []
 
-    def schedule(self, event: Event[Any], *args, **kwds) -> None:
+    def schedule(self, event: Event, *args, **kwds) -> None:
         self._scheduled_events.append((event, args, kwds))
 
     def pump(self) -> None:
@@ -49,7 +49,7 @@ class QueueScheduler(Scheduler):
     def __init__(self) -> None:
         self._scheduled_events: deque[EventArgs] = deque()
 
-    def schedule(self, event: Event[Any], *args, **kwds) -> None:
+    def schedule(self, event: Event, *args, **kwds) -> None:
         self._scheduled_events.append((event, args, kwds))
 
     def pump(self) -> None:
@@ -63,7 +63,7 @@ DEFAULT: type[Scheduler] = InstantScheduler
 _active_scheduler: Scheduler = DEFAULT()
 
 
-def schedule(event: Event[Any], *args, **kwds) -> None:
+def schedule(event: Event, *args, **kwds) -> None:
     _active_scheduler.schedule(event, *args, **kwds)
 
 

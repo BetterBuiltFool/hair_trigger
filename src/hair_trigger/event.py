@@ -5,7 +5,7 @@ from collections.abc import Callable
 from functools import singledispatchmethod
 from types import MethodType
 from typing import Any
-from weakref import ref, WeakKeyDictionary
+from weakref import WeakKeyDictionary
 
 from hair_trigger import scheduler, threader
 
@@ -17,27 +17,17 @@ class _Sentinel:
 SENTINEL = _Sentinel()
 
 
-class Event[T](ABC):
+class Event(ABC):
     """
     Base class for per-instance events.
     Subclasses must define the `trigger` method, which defines the event signature.
     """
 
-    def __init__(self, instance: T) -> None:
-        self._instance = ref(instance)
+    def __init__(self) -> None:
         self.listeners: WeakKeyDictionary[Any, list[Callable]] = WeakKeyDictionary()
         self.method_listeners: WeakKeyDictionary[Any, list[Callable]] = (
             WeakKeyDictionary()
         )
-
-    @property
-    def instance(self) -> T | None:
-        """
-        The owning instance of the event.
-
-        If the instance has expired, returns `None`.
-        """
-        return self._instance()
 
     @singledispatchmethod
     def __call__(self, _) -> Any:

@@ -12,10 +12,6 @@ class OnTestEvent(event.Event):
         return super().trigger(list_, number)
 
 
-class Dummy:
-    pass
-
-
 class TestInstantScheduler(unittest.TestCase):
 
     def setUp(self) -> None:
@@ -29,11 +25,9 @@ class TestInstantScheduler(unittest.TestCase):
         """
         numbers = [1, 2, 3]
 
-        dummy_owner = Dummy()
-
-        test_event_1 = OnTestEvent(dummy_owner)
-        test_event_2 = OnTestEvent(dummy_owner)
-        test_event_3 = OnTestEvent(dummy_owner)
+        test_event_1 = OnTestEvent()
+        test_event_2 = OnTestEvent()
+        test_event_3 = OnTestEvent()
 
         @test_event_1
         def _(list_: list[int], number: int) -> None:
@@ -74,11 +68,9 @@ class TestQueueScheduler(unittest.TestCase):
         """
         numbers = [1, 2, 3]
 
-        dummy_owner = Dummy()
-
-        test_event_1 = OnTestEvent(dummy_owner)
-        test_event_2 = OnTestEvent(dummy_owner)
-        test_event_3 = OnTestEvent(dummy_owner)
+        test_event_1 = OnTestEvent()
+        test_event_2 = OnTestEvent()
+        test_event_3 = OnTestEvent()
 
         @test_event_1
         def _(list_: list[int], number: int) -> None:
@@ -122,11 +114,9 @@ class TestStackScheduler(unittest.TestCase):
         """
         numbers = [1, 2, 3]
 
-        dummy_owner = Dummy()
-
-        test_event_1 = OnTestEvent(dummy_owner)
-        test_event_2 = OnTestEvent(dummy_owner)
-        test_event_3 = OnTestEvent(dummy_owner)
+        test_event_1 = OnTestEvent()
+        test_event_2 = OnTestEvent()
+        test_event_3 = OnTestEvent()
 
         @test_event_1
         def _(list_: list[int], number: int) -> None:
