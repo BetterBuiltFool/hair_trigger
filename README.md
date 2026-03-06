@@ -264,19 +264,19 @@ By default, Hair Trigger will attempt to run callbacks immediately, in syncronou
 
 The default system will run callback synchronously, so any blocking that occurs will block the entire thread. If that's undesireable, you can also use:
 
-- ThreadThreader: Uses the Python threading module to run callbacks in new threads, good for general purpose multithreading.
-- AsyncioThreader: Uses Python's asyncio module, useful for when threading must be async-aware, such as in WASM deployments. 
+- ThreadRunner: Uses the Python threading module to run callbacks in new threads, good for general purpose multithreading.
+- AsyncioRunner: Uses Python's asyncio module, useful for when threading must be async-aware, such as in WASM deployments. 
 
 ```python
 import hair_trigger
-from hair_trigger.threader import AsyncioThreader, ThreadThreader
+from hair_trigger.runner import AsyncioRunner, ThreadRunner
 
 # Run standard threads
-hair_trigger.config(threader=ThreadThreader())
+hair_trigger.config(runner=ThreadRunner())
 
 
 # Run async-aware
-hair_trigger.config(threader=AsyncioThreader())
+hair_trigger.config(runner=AsyncioRunner())
 ```
 
 #### Scheduling Modes
@@ -303,22 +303,22 @@ hair_trigger.scheduler.pump_events()
 
 ```
 
-#### Custom Threaders and Schedulers
+#### Custom Runners and Schedulers
 
-Threaders and schedulers are protocols, so custom one can be created to get specific behaviors.
+Runners and schedulers are protocols, so custom one can be created to get specific behaviors.
 
 For example:
 
 ```python
 
-class LoggingThreadThreader:
+class LoggingThreadRunner:
 
     def schedule(self, func: Callable[..., Any], *args, **kwds) -> None:
         print(f"Calling function {func}")
         threading.Thread(target=func, args=args, kwargs=kwds).start()
 
 
-hair_trigger.config(LoggingThreadThreader())
+hair_trigger.config(LoggingThreadRunner())
 ```
 
 This will log the function before starting the thread.

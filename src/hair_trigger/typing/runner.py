@@ -7,11 +7,10 @@ if TYPE_CHECKING:
     from typing import Any
 
 
-class Threader(Protocol):
+class Runner(Protocol):
     """
-    Protocol describing threader types. These simply call a callable with supplied
-    arguments in one way or another, with the specific behavior being implementation
-    defined.
+    Runners call a callable with supplied arguments in one way or another, with the
+    specific behavior being implementation defined.
     """
 
     def start(self, func: Callable[..., Any], *args, **kwds) -> None:

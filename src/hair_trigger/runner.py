@@ -4,33 +4,33 @@ import asyncio
 import threading
 from typing import Any, TYPE_CHECKING
 
-from .typing.threader import Threader
+from .typing.runner import Runner
 
 if TYPE_CHECKING:
     from collections.abc import Callable
 
 
-class SyncThreader(Threader):
+class SyncRunner(Runner):
     """
-    Default, synchronous threader that simple calls the callable.
+    Default, synchronous runner that simple calls the callable.
     """
 
     def start(self, func: Callable[..., Any], *args, **kwds) -> None:
         func(*args, **kwds)
 
 
-class ThreadThreader(Threader):
+class ThreadRunner(Runner):
     """
-    Simple asynchronous threader using the python threading library.
+    Simple asynchronous runner using the python threading library.
     """
 
     def start(self, func: Callable[..., Any], *args, **kwds) -> None:
         threading.Thread(target=func, args=args, kwargs=kwds).start()
 
 
-class AsyncioThreader(Threader):
+class AsyncioRunner(Runner):
     """
-    threader that relies on asyncio, useful for web deployment where python.threading
+    Runner that relies on asyncio, useful for web deployment where python.threading
     doesn't work properly.
     """
 
@@ -38,10 +38,10 @@ class AsyncioThreader(Threader):
         asyncio.create_task(func(*args, **kwds))
 
 
-DEFAULT: type[Threader] = SyncThreader
+DEFAULT: type[Runner] = SyncRunner
 
-_active_threader: Threader = DEFAULT()
+_active_runner: Runner = DEFAULT()
 
 
 def start(func: Callable[..., Any], *args, **kwds) -> None:
-    _active_threader.start(func, *args, **kwds)
+    _active_runner.start(func, *args, **kwds)
