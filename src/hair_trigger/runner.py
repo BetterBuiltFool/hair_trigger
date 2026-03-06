@@ -4,7 +4,7 @@ import asyncio
 import threading
 from typing import Any, TYPE_CHECKING
 
-from .typing.threader import Threader
+from .typing.runner import Threader
 
 if TYPE_CHECKING:
     from collections.abc import Callable

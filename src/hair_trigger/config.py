@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 import hair_trigger.scheduler as scheduler_module
-import hair_trigger.threader as threader_module
+import hair_trigger.runner as threader_module
 
 if TYPE_CHECKING:
     from hair_trigger.typing import Scheduler, Threader

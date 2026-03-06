@@ -1,12 +1,12 @@
 import unittest
 
-from hair_trigger import scheduler, threader, config
+from hair_trigger import runner, scheduler, config
 
 
 class TestConfig(unittest.TestCase):
 
     def tearDown(self) -> None:
-        config(scheduler.DEFAULT(), threader.DEFAULT())
+        config(scheduler.DEFAULT(), runner.DEFAULT())
 
     def test_scheduler_no_threader(self) -> None:
         """
@@ -16,28 +16,26 @@ class TestConfig(unittest.TestCase):
         config(scheduler=scheduler.QueueScheduler())
 
         self.assertIsInstance(scheduler._active_scheduler, scheduler.QueueScheduler)
-        self.assertIsInstance(threader._active_threader, threader.DEFAULT)
+        self.assertIsInstance(runner._active_threader, runner.DEFAULT)
 
     def test_threader_no_scheduler(self) -> None:
         """
         Changing only the threader, see if the scheduler remains default.
         """
 
-        config(threader=threader.AsyncioThreader())
+        config(threader=runner.AsyncioThreader())
 
         self.assertIsInstance(scheduler._active_scheduler, scheduler.DEFAULT)
-        self.assertIsInstance(threader._active_threader, threader.AsyncioThreader)
+        self.assertIsInstance(runner._active_threader, runner.AsyncioThreader)
 
     def test_both(self) -> None:
         """
         Ensure that both change appropriately.
         """
 
-        config(
-            scheduler=scheduler.QueueScheduler(), threader=threader.AsyncioThreader()
-        )
+        config(scheduler=scheduler.QueueScheduler(), threader=runner.AsyncioThreader())
 
-        self.assertIsInstance(threader._active_threader, threader.AsyncioThreader)
+        self.assertIsInstance(runner._active_threader, runner.AsyncioThreader)
         self.assertIsInstance(scheduler._active_scheduler, scheduler.QueueScheduler)
 
 
