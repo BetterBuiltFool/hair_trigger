@@ -3,7 +3,7 @@ from __future__ import annotations
 from collections import deque
 from typing import Any, TYPE_CHECKING
 
-from .typing.scheduler import Scheduler
+from hair_trigger.typing.scheduler import Scheduler
 
 if TYPE_CHECKING:
     from hair_trigger.event import Event

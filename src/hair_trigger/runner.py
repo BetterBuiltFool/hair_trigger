@@ -4,7 +4,7 @@ import asyncio
 import threading
 from typing import Any, TYPE_CHECKING
 
-from .typing.runner import Runner
+from hair_trigger.typing.runner import Runner
 
 if TYPE_CHECKING:
     from collections.abc import Callable
