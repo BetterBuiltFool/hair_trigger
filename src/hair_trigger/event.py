@@ -76,9 +76,6 @@ class Event(ABC):
     def notify(self, *args, **kwds) -> None:
         """
         Calls all registered listeners, passing along the args and kwds.
-        This is never called directly, the instance event subclass will have its own
-        defined call method that defines its parameters, which are passed on to the
-        listeners.
         """
         for caller, listeners in self.listeners.items():
             if caller is not SENTINEL:
